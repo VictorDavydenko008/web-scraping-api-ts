@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  web-scraping-api:
+    container_name: web-scraping-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.production
+    depends_on:
+      - mongodb
+    networks:
+      - api-network
+
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    external: true
