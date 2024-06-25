@@ -12,17 +12,9 @@ services:
       - .env.production
     depends_on:
       - mongodb
-    networks:
-      - api-network
 
   mongodb:
     image: mongo:4.4
     container_name: mongodb
     ports:
       - "27017:27017"
-    networks:
-      - api-network
-
-networks:
-  api-network:
-    external: true
