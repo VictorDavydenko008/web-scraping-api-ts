@@ -10,15 +10,19 @@ router.post('/scrape/rozetka', async (req: { body: { url: string; pages_num: num
     try {
         // if url belongs to Rozetka
         if (!req.body.url.startsWith('https://rozetka.com.ua/')) {
-            res.status(400).json({ error: 'Invalid URL. Expected Rozetka website URL.' });           
+            res.status(400).json({ error: 'Invalid URL. Expected Rozetka website URL.' }); 
+            return;          
         }
 
-        // floor because of possible loss of precision
-        if (!(Number.isInteger(Math.floor(req.body.pages_num)) && (req.body.pages_num > 0))) {
+        let pagesNum = Math.floor(req.body.pages_num);
+        if (isNaN(pagesNum)) { // pages_num parameter is not provided or invalid
+            pagesNum = 1;
+        } if (!(Number.isInteger(pagesNum) && (pagesNum > 0))) {
             res.status(400).json({ error: 'Invalid number of pages. Expected integer greater than 0.'});
+            return;
         }
 
-        const data = await scrapeRozetka(req.body.url, Math.floor(req.body.pages_num));
+        const data = await scrapeRozetka(req.body.url, pagesNum);
         
         // save each scrapped item to the database
         for (const page of data.pagesData) {
@@ -52,15 +56,19 @@ router.post('/scrape/rozetka', async (req: { body: { url: string; pages_num: num
 router.post('/scrape/telemart', async (req, res) => {
     try {
         if (!req.body.url.startsWith('https://telemart.ua/')) {
-            res.status(400).json({ error: 'Invalid URL. Expected Telemart website URL.' });           
+            res.status(400).json({ error: 'Invalid URL. Expected Telemart website URL.' }); 
+            return;
         }
 
-        // floor because of possible loss of precision
-        if (!(Number.isInteger(Math.floor(req.body.pages_num)) && req.body.pages_num > 0)) {
+        let pagesNum = Math.floor(req.body.pages_num);
+        if (isNaN(pagesNum)) { // pages_num parameter is not provided or invalid
+            pagesNum = 1;
+        } else if (!(Number.isInteger(pagesNum) && pagesNum > 0)) {
             res.status(400).json({ error: 'Invalid number of pages. Expected integer greater than 0.' });
+            return;
         }
 
-        const data = await scrapeTelemart(req.body.url, Math.floor(req.body.pages_num));
+        const data = await scrapeTelemart(req.body.url, pagesNum);
 
         // save each scrapped item to the database
         for (const page of data.pagesData) {
