@@ -107,23 +107,21 @@ router.get('/', async (req, res) => {
     }
 })
 
-// GET-request to the database to get all items 
-router.get('/all', async (req, res) => {
+// GET-request to the database to get all items or items of specific type
+// If a query parameter 'type' is provided, it retrieves items of that type
+// If no query parameter is provided, it retrieves all items
+router.get('/items', async(req, res) => {
     try {
-        const items = await Item.find();
+        let items;
+        console.log(req.query.type);
+        if (req.query.type) {
+            items = await Item.find({ type: req.query.type });
+        } else {
+            items = await Item.find();
+        }
         res.status(200).json( items );
     } catch (error) {
         res.status(500).json({ error: 'Failed to get items.'});
-    }
-})
-
-// GET-request to the database to get all items of specific type
-router.get('/items/:type', async(req, res) => {
-    try {
-        const items = await Item.find({ type: req.params.type });
-        res.status(200).json( items );
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to get items of type ' + req.body.type + '.' });
     }
 })
 
