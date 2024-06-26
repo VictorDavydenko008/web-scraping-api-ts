@@ -71,7 +71,7 @@ Scrapes products data from multiple pages of a specified category starting from 
 
  Parameters:
 `url` (string): The starting Rozetka URL of the page to begin scraping.
-`pages_num` (integer): The number of pages to scrape starting from the specified URL. If the provided `pages_num` exceeds the total available pages from the starting URL, scraping will stop at the last available page.
+`pages_num` (integer): The number of pages to scrape starting from the specified URL. If the provided `pages_num` exceeds the total available pages from the starting URL, scraping will stop at the last available page. If `pages_num` is not provided in the request body, only the initial page specified by `url` will be processed.
 
  Response: Scraped data in JSON format.
 
@@ -87,7 +87,7 @@ Scrapes products data from multiple pages of a specified category starting from 
 
  Parameters:
 `url` (string): The starting Telemart URL of the page to begin scraping.
-`pages_num` (integer): The number of pages to scrape starting from the specified URL. If the provided `pages_num` exceeds the total available pages from the starting URL, scraping will stop at the last available page.
+`pages_num` (integer): The number of pages to scrape starting from the specified URL. If the provided `pages_num` exceeds the total available pages from the starting URL, scraping will stop at the last available page. If `pages_num` is not provided in the request body, only the initial page specified by `url` will be processed.
 
 Response: Scraped data in JSON format.
 
