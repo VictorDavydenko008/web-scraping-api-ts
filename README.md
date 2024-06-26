@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a web scraping API that scrapes data from e-commerce websites and stores it in a database. It supports scraping data from online stores such as Rozetka and Telemart. The API provides endpoints to retrieve and manage the scraped data.
+This project is a web scraping API that scrapes items data from e-commerce websites and stores it in a database. It supports scraping data from online stores such as Rozetka and Telemart. The API provides endpoints to retrieve and manage the scraped data.
 
 ## Getting Started
 
@@ -61,7 +61,7 @@ This project is a web scraping API that scrapes data from e-commerce websites an
 ## Endpoints
 1. `POST /api/scrape/rozetka`
  Description:
-Scrapes products data from multiple pages of a specified category starting from a given Rozetka URL.
+Scrapes items data from multiple pages of a specified category starting from a given Rozetka URL.
 
  Example request body:
 {
@@ -77,7 +77,7 @@ Scrapes products data from multiple pages of a specified category starting from 
 
 2. `POST /api/scrape/telemart`
  Description:
-Scrapes products data from multiple pages of a specified category starting from a given Telemart URL.
+Scrapes items data from multiple pages of a specified category starting from a given Telemart URL.
 
  Example request body:
 {
@@ -93,22 +93,15 @@ Response: Scraped data in JSON format.
 
 3. `GET /api/`
  Description:
-Retrieves all distinct product types from the database.
+Retrieves all distinct item types from the database.
 
- Response: Distinct product types in JSON format.
+ Response: Distinct item types in JSON format.
 
-4. `GET /api/all`
+4. `GET /api/items`
  Description:
-Retrieves all products from the database.
+Retrieves all items or items of a specific type from the database.
 
- Response: All products stored in the database in JSON format.
+ Query Parameters:
+`type` (optional): The type of items to retrieve.
 
-
-5. `GET /api/items/:type`
- Description:
-Retrieves all products of a specific type from the database.
-
- Parameters:
-`type` (string): The type of products to retrieve from the database.
-
- Response: All products of a specific type stored in the database in JSON format.
+ Response: All items or items of a specific type stored in the database in JSON format.
