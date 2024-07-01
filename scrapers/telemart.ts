@@ -69,6 +69,7 @@ async function scrapePage(url: string): Promise<{ pageItems: ScrapedItem[]}> {
     }
 }
 
+// scrape data about product from its page
 async function scrapeItem(url: string): Promise<ScrapedItem> {
     try {
         const html = await axios.get(url);
