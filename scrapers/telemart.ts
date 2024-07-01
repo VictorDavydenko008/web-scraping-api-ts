@@ -4,7 +4,7 @@ import ScrapedItem from '../interfaces/scrapedItem';
 
 export default async function scrapeTelemart(url: string, pages_num: number): Promise<{ pagesData: { pageItems: ScrapedItem[]}[] }> {
     try {
-        // define the type of the current page: first page | one of the pages
+        // define the type of the current page: first page or one of the pages
         const match = url.match(/\?page=(\d+)$/);
         const currentPage = match ? parseInt(match[1], 10) : 1;
 
@@ -37,6 +37,7 @@ export default async function scrapeTelemart(url: string, pages_num: number): Pr
     }
 }
 
+// scrape data about products from category page
 async function scrapePage(url: string): Promise<{ pageItems: ScrapedItem[]}> {
     try {
         const html = await axios.get(url);
@@ -107,11 +108,7 @@ async function scrapeItem(url: string): Promise<ScrapedItem> {
         const image = prepareForDB(imageUrl, 1024);
         
         let specifications = {};
-        try {
-            specifications = collectSpecifications($);
-        } catch (error) {
-            throw error;
-        }
+        specifications = collectSpecifications($);
 
         return {
             title: title, 

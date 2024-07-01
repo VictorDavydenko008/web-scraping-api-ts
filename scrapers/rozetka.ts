@@ -117,11 +117,7 @@ async function scrapeItem(url: string): Promise<ScrapedItem> {
         const image = prepareForDB(imageUrl, 1024);
         
         let specifications = {};
-        try {
-            specifications = await collectSpecifications(url);
-        } catch(error) {
-            throw error;
-        }
+        specifications = await collectSpecifications(url);
 
         return {
             title: title, 
@@ -173,31 +169,36 @@ function collectDescription(element: cheerio.Cheerio, descriptionText: { content
 
 // collect the specifications from item characteristics page
 async function collectSpecifications(url: string): Promise<Record<string, string>> {
-    let specifications: Record<string, string> = {};
+    try {
+        let specifications: Record<string, string> = {};
+        
+        const html = await axios.get(url + 'characteristics/');
+        if (html.status !== 200) {
+            throw new Error("It seems the website's layout has been altered.")
+        }
+        const $ = cheerio.load(html.data);
 
-    const html = await axios.get(url + 'characteristics/');
-    if (html.status !== 200) {
-        throw new Error("It seems the website's layout has been altered.")
-    }
-    const $ = cheerio.load(html.data);
+        $(".list.ng-star-inserted").children(".item.ng-star-inserted").each((_, row) => {
+            const label = $(row).find('dt').text().trim();
 
-    $(".list.ng-star-inserted").children(".item.ng-star-inserted").each((_, row) => {
-        const label = $(row).find('dt').text().trim();
-
-        let value = "";
-        $(row).find('dd ul').children('li').children().each((_, elem) => {
-            $(elem).contents().each((_, e) => {
-                const text = $(e).text().trim();
-                if (text) {
-                    value += text + '\n';
-                }
+            let value = "";
+            $(row).find('dd ul').children('li').children().each((_, elem) => {
+                $(elem).contents().each((_, e) => {
+                    const text = $(e).text().trim();
+                    if (text) {
+                        value += text + '\n';
+                    }
+                });
             });
+
+            specifications[label] = value.replace(/\n$/, '');
         });
 
-        specifications[label] = value.replace(/\n$/, '');
-    });
-
-    return specifications;
+        return specifications;
+    } catch (error) {
+        throw error;
+    }
+    
 }
 
 // adjust string to the desired size
