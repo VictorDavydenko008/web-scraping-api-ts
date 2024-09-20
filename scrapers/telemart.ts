@@ -77,12 +77,12 @@ async function scrapeItem(url: string): Promise<ScrapedItem> {
 
         const titleElement = $(".card-block__title");
         if (!titleElement.length) throw new Error("It seems the website's layout has been altered.");
-        const title = prepareForDB(titleElement.text().trim(), 256);
+        const title = titleElement.text().trim();
 
         // use item code instead of subtitle
         const itemCode = $(".card-block__art p:eq(1)").text().trim();
         if (!itemCode) throw new Error("It seems the website's layout has been altered.");
-        const subtitle = prepareForDB(itemCode, 256);
+        const subtitle = itemCode;
         
         // object to store description content
         let descriptionText = { content: "" };
@@ -94,7 +94,7 @@ async function scrapeItem(url: string): Promise<ScrapedItem> {
             collectDescription(descriptionElement, descriptionText, $);  
         }
 
-        const description = prepareForDB(descriptionText.content.trim().replace(/\n$/, ''), 2048);
+        const description = descriptionText.content.trim().replace(/\n$/, '');
 
         const priseElement = $('.card-block__price-summ:eq(0)');
         // item is out of stock
@@ -102,11 +102,11 @@ async function scrapeItem(url: string): Promise<ScrapedItem> {
 
         const typeElement = $('.breadcrumb-item:eq(-2)');
         if (!typeElement.length) throw new Error("It seems the website's layout has been altered.");
-        const type = prepareForDB(typeElement.text().trim(), 128);
+        const type = typeElement.text().trim();
 
         const imageUrl= $('.img4zoom img:eq(0)').attr('src');
         if (!imageUrl) throw new Error("It seems the website's layout has been altered.");
-        const image = prepareForDB(imageUrl, 1024);
+        const image = imageUrl;
         
         let specifications = {};
         specifications = collectSpecifications($);
@@ -178,9 +178,4 @@ function collectDescription(element: cheerio.Cheerio, descriptionText: { content
             }
         }
     });  
-}
-
-// adjust string to the desired size
-function prepareForDB(text: string, len: number): string {
-    return (text.length > len) ? text.substring(0, len - 3) + '...' : text;
 }
